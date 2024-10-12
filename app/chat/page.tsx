@@ -4,6 +4,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 
 import ChatBoxComponent from '@/components/chat-box';
+import SandpackEditor from '@/components/editor/sandpack-editor';
 
 const DynamicSplit = dynamic(() => import('react-split'), { ssr: false });
 
@@ -25,12 +26,8 @@ export default function ChatPage() {
         <div className="px-4 py-2 overflow-auto">
           <ChatBoxComponent />
         </div>
-        <div className="bg-gray-200 p-4 overflow-auto">
-          <h2 className="text-xl font-bold mb-4">Editor</h2>
-          <div className="bg-white rounded-lg p-4 shadow">
-            {/* Placeholder for editor */}
-            <p>Editor content will appear here...</p>
-          </div>
+        <div className="p-4 overflow-auto">          
+          <SandpackEditor />
         </div>
       </DynamicSplit>
     </div>
