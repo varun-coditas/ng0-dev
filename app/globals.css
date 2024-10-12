@@ -103,3 +103,19 @@ body {
 .tab-buttons button.active:hover {
   background-color: #0056b3;
 }
+
+/* Add this at the end of the file */
+.split-pane > .gutter {
+  background-color: #e0e0e0;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
+.split-pane > .gutter.gutter-horizontal {
+  cursor: col-resize;
+}
+
+
+:root {
+  --sp-layout-height: 100% !important;
+}

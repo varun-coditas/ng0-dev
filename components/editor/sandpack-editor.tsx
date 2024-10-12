@@ -1,108 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   SandpackProvider,
   SandpackLayout,
   SandpackCodeEditor,
   SandpackPreview,
+  useActiveCode,
+  useSandpack,
 } from "@codesandbox/sandpack-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import files from "./default-files";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+
+// Custom hook to manage preview state
+function usePreviewState() {
+  const { sandpack } = useSandpack();
+  const { code } = useActiveCode();
+  const [lastRunCode, setLastRunCode] = useState(code);
+
+  useEffect(() => {
+    if (sandpack.status === "running") {
+      setLastRunCode(code);
+    }
+  }, [sandpack.status, code]);
+
+  return { lastRunCode, setLastRunCode };
+}
 
 export default function SandpackEditor() {
-  const files = {
-    "/src/app/app.component.css": "",
-    "/src/app/app.component.html": {
-      code: `<div class="container">
-      <h1>{{ helloWorld }}</h1>
-    
-      <input [(ngModel)]="userInput" placeholder="Type something..." />
-      <button (click)="toggleMessage()">Toggle Message</button>
-      <button (click)="clearInput()">Clear Input</button>
-    
-      <p *ngIf="showMessage">You typed: {{ userInput }}</p>
-    </div>
-        
-    `,
-    },
-    "/src/app/app.component.ts": {
-      code: `import { Component } from "@angular/core";
-    import { CommonModule } from "@angular/common";
-    import { FormsModule } from "@angular/forms";
-    
-    @Component({
-      selector: "app-root",
-      standalone: true,
-      templateUrl: "./app.component.html",
-      styleUrls: ["./app.component.css"],
-      imports: [CommonModule, FormsModule],
-    })
-    export class AppComponent {
-      helloWorld = "Hello world";
-      showMessage = false;
-      userInput = "";
-    
-      toggleMessage(): void {
-        this.showMessage = !this.showMessage;
-      }
-    
-      clearInput(): void {
-        this.userInput = "";
-      }
-    }
-    
-    
-    `,
-    },
-    "/src/index.html": {
-      code: `<!doctype html>
-    <html lang="en">
-    <head>
-      <meta charset="utf-8">
-      <title>Standalone Angular</title>
-      <base href="/">
-          
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="icon" type="image/x-icon" href="favicon.ico">
-    </head>
-    <body>
-       <app-root></app-root>
-    </body>
-    </html>
-    `,
-    },
-    "/src/main.ts": {
-      code: `import "@angular/compiler";
-          import { bootstrapApplication } from '@angular/platform-browser';
-    import { AppComponent } from './app/app.component';
-    
-    bootstrapApplication(AppComponent)
-      .catch(err => console.log(err));
-    `,
-    },
-    "/src/polyfills.ts": {
-      code: `import "zone.js"; // Required for Angular      
-    `,
-    },
-    "/package.json": {
-      code: JSON.stringify(
-        {
-          dependencies: {
-            "@angular/animations": "^18.2.0",
-            "@angular/common": "^18.2.0",
-            "@angular/compiler": "^18.2.0",
-            "@angular/core": "^18.2.0",
-            "@angular/forms": "^18.2.0",
-            "@angular/platform-browser": "^18.2.0",
-            "@angular/platform-browser-dynamic": "^18.2.0",
-            "zone.js": "~0.14.10",
-            rxjs: "^7.5.0",
-          },
-          main: "/src/main.ts",
-        },
-        null,
-        2
-      ),
-    },
-  };
+  const [activeView, setActiveView] = useState("editor");
+  const [hasRunOnce, setHasRunOnce] = useState(false);
 
   let customSetup = {
     dependencies: {},
@@ -114,6 +40,14 @@ export default function SandpackEditor() {
     // set files
     // get input prompt
   };
+
+  const toggleView = () => {
+    setActiveView(activeView === "editor" ? "preview" : "editor");
+    if (activeView === "editor" && !hasRunOnce) {
+      setHasRunOnce(true);
+    }
+  };
+
   return (
     <div className="w-full h-full flex flex-col">
       <SandpackProvider
@@ -121,23 +55,45 @@ export default function SandpackEditor() {
         files={files}
         theme="dark"
         customSetup={customSetup}
+        options={{
+          showLineNumbers: true,
+          autoReload: false, // Disable auto-reload
+        }}
       >
-        <Tabs defaultValue="editor" className="w-full h-full flex flex-col">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="editor">Editor</TabsTrigger>
-            <TabsTrigger value="preview">Preview</TabsTrigger>
-          </TabsList>
-          <TabsContent value="editor" className="flex-grow h-full">
-            <SandpackLayout className="h-full h-[calc(100vh-64px)]">
-              <SandpackCodeEditor className="h-full" />
-            </SandpackLayout>
-          </TabsContent>
-          <TabsContent value="preview" className="flex-grow h-full">
-            <SandpackLayout className="h-full">
-              <SandpackPreview className="h-full" />
-            </SandpackLayout>
-          </TabsContent>
-        </Tabs>
+        <div className="p-2 flex items-center space-x-2">
+          <Label htmlFor="view-toggle" className="text-sm font-medium">
+            {activeView === "editor" ? "Editor" : "Preview"}
+          </Label>
+          <Switch
+            id="view-toggle"
+            checked={activeView === "preview"}
+            onCheckedChange={toggleView}
+          />
+        </div>
+        <div className="flex-grow relative overflow-hidden">
+          <div
+            className="flex transition-transform duration-300 ease-in-out h-full"
+            style={{
+              transform: `translateX(${activeView === "editor" ? "0%" : "-50%"})`,
+              width: "200%",
+            }}
+          >
+            <div className="w-1/2 h-full">
+              <SandpackLayout className="h-full">
+                <SandpackCodeEditor
+                  className="h-full"
+                  readOnly
+                  showLineNumbers={true}
+                />
+              </SandpackLayout>
+            </div>
+            <div className="w-1/2 h-full">
+              <SandpackLayout className="h-full">
+                <SandpackPreview className="h-full" />
+              </SandpackLayout>
+            </div>
+          </div>
+        </div>
       </SandpackProvider>
     </div>
   );

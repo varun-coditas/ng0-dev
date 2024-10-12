@@ -21,7 +21,7 @@ export default function ChatPage() {
         dragInterval={1}
         direction="horizontal"
         cursor="col-resize"
-        className="flex h-full"
+        className="flex h-full split-pane"
       >
         <div className="px-4 py-2 overflow-auto">
           <ChatBoxComponent />
