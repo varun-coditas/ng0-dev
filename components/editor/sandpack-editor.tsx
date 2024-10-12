@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import {
   SandpackProvider,
@@ -48,6 +49,24 @@ export default function SandpackEditor() {
     }
   };
 
+  try {
+    fetch("http://localhost:5500/get-code", {
+      method: "POST",
+      body: JSON.stringify({ message: "ecommerce product card" }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        files["/src/app/app.component.html"] = data.code.html;
+        files["/src/app/app.component.css"] = data.code.css;
+        files["/src/app/app.component.ts"] = data.code.ts;
+      });
+  } catch (error) {
+    console.error(error);
+  }
+
   return (
     <div className="w-full h-full flex flex-col">
       <SandpackProvider
@@ -74,7 +93,9 @@ export default function SandpackEditor() {
           <div
             className="flex transition-transform duration-300 ease-in-out h-full"
             style={{
-              transform: `translateX(${activeView === "editor" ? "0%" : "-50%"})`,
+              transform: `translateX(${
+                activeView === "editor" ? "0%" : "-50%"
+              })`,
               width: "200%",
             }}
           >
@@ -90,7 +111,9 @@ export default function SandpackEditor() {
             </div>
             <div className="w-1/2 h-full">
               <SandpackLayout className="h-full">
-                <SandpackPreview className="h-full" style={{ height: "100%" }} />
+                <SandpackPreview
+                  className="h-full"
+                />
               </SandpackLayout>
             </div>
           </div>

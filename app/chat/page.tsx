@@ -1,17 +1,18 @@
 'use client';
-
 import React from 'react';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 
 import ChatBoxComponent from '@/components/chat-box';
 import SandpackEditor from '@/components/editor/sandpack-editor';
 
-const DynamicSplit = dynamic(() => import('react-split'), { ssr: false });
+import Split from 'react-split';
+
+// const DynamicSplit = dynamic(() => import('react-split'), { ssr: false });
 
 export default function ChatPage() {
   return (
     <div className="h-[calc(100vh-64px)]"> {/* Assuming header height is 64px */}
-      <DynamicSplit
+      <Split
         sizes={[40, 60]}
         minSize={[200, 300]}
         expandToMin={false}
@@ -29,7 +30,7 @@ export default function ChatPage() {
         <div className="p-4 overflow-auto">          
           <SandpackEditor />
         </div>
-      </DynamicSplit>
+      </Split>
     </div>
   );
 }
