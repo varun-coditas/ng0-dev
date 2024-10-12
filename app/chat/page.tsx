@@ -11,7 +11,7 @@ export default function ChatPage() {
   return (
     <div className="h-[calc(100vh-64px)]"> {/* Assuming header height is 64px */}
       <DynamicSplit
-        sizes={[30, 70]}
+        sizes={[40, 60]}
         minSize={[200, 300]}
         expandToMin={false}
         gutterSize={10}

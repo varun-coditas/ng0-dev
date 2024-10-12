@@ -106,7 +106,7 @@ export default function ChatBoxComponent() {
               handleSendMessage()
             }
           }}
-          placeholder="Ask a follow up..."
+          placeholder="Ask ng0.dev anything..."
           className="w-full min-h-[60px] resize-none rounded-lg border-gray-300 focus:border-primary focus:ring-primary"
         />
         <div className="flex justify-between mt-2">
@@ -135,7 +135,7 @@ export default function ChatBoxComponent() {
           </div>
           <Button onClick={handleSendMessage} size="sm">
             <Send className="h-4 w-4 mr-2" />
-            Send
+            Ask
           </Button>
         </div>
       </div>
