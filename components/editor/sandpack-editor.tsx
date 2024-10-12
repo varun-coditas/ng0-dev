@@ -84,12 +84,13 @@ export default function SandpackEditor() {
                   className="h-full"
                   readOnly
                   showLineNumbers={true}
+                  style={{ height: "100%" }}
                 />
               </SandpackLayout>
             </div>
             <div className="w-1/2 h-full">
               <SandpackLayout className="h-full">
-                <SandpackPreview className="h-full" />
+                <SandpackPreview className="h-full" style={{ height: "100%" }} />
               </SandpackLayout>
             </div>
           </div>
