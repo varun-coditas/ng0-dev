@@ -5,6 +5,7 @@ import {
   SandpackLayout,
   SandpackCodeEditor,
   SandpackPreview,
+  SandpackConsole,
   useActiveCode,
   useSandpack,
 } from "@codesandbox/sandpack-react";
@@ -60,7 +61,13 @@ export default function SandpackEditor({ code }: SandpackEditorProps) {
         customSetup={customSetup}
         options={{
           showLineNumbers: true,
-          autoReload: false, // Disable auto-reload
+          autoReload: true, // Disable auto-reload
+          visibleFiles: [
+            "/src/app/app.component.html",
+            "/src/app/app.component.css",
+            "/src/app/app.component.ts",
+            "/src/index.html",
+          ],
         }}
       >
         <div className="p-2 flex items-center space-x-2">
@@ -83,24 +90,23 @@ export default function SandpackEditor({ code }: SandpackEditorProps) {
               width: "200%",
             }}
           >
-            <div className="w-1/2 h-full">
-              <SandpackLayout className="h-full">
+            <div className="w-1/2">
                 <SandpackCodeEditor
-                  className="h-full"
                   readOnly
                   showLineNumbers={true}
+                  
+                  style={{ height: "100%" }}
+                />
+            </div>
+            <div className="w-1/2">
+              <SandpackLayout style={{ height: "100%" }}>
+                <SandpackPreview
                   style={{ height: "100%" }}
                 />
               </SandpackLayout>
             </div>
-            <div className="w-1/2 h-full">
-              <SandpackLayout className="h-full">
-                <SandpackPreview
-                  className="h-full"
-                />
-              </SandpackLayout>
-            </div>
           </div>
+          <SandpackConsole />
         </div>
       </SandpackProvider>
     </div>

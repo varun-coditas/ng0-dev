@@ -27,6 +27,7 @@ def chat():
                     "content": """
                     You are an AI assistant that generates Angular component code based on user requests. The code should be in a standalone Angular project. 
                     The code you give is going to be put in app.component.html, app.component.css, and app.component.ts. 
+                    You can use bootstrap5.3.3 classes to style the component.
                     You will also need to provide the default imports for the component.
                     The code should be valid and working when copy and pasted into an Angular project.
                     This is the default code:
