@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   SandpackProvider,
   SandpackLayout,
@@ -8,9 +8,9 @@ import {
   useActiveCode,
   useSandpack,
 } from "@codesandbox/sandpack-react";
-import files from "./default-files";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { SandpackContext } from '@/contexts/SandpackContext';
 
 // Custom hook to manage preview state
 function usePreviewState() {
@@ -27,19 +27,21 @@ function usePreviewState() {
   return { lastRunCode, setLastRunCode };
 }
 
-export default function SandpackEditor() {
+interface SandpackEditorProps {
+  code: Record<string, string>;
+}
+
+export default function SandpackEditor({ code }: SandpackEditorProps) {
   const [activeView, setActiveView] = useState("editor");
   const [hasRunOnce, setHasRunOnce] = useState(false);
+  const { files, updateSandpackFiles } = useContext(SandpackContext);
+
+  useEffect(() => {
+    updateSandpackFiles(code);
+  }, [code, updateSandpackFiles]);
 
   let customSetup = {
     dependencies: {},
-  };
-
-  let generateCode = () => {
-    // call OpenAI API based on input
-    // get response
-    // set files
-    // get input prompt
   };
 
   const toggleView = () => {
@@ -48,24 +50,6 @@ export default function SandpackEditor() {
       setHasRunOnce(true);
     }
   };
-
-  try {
-    fetch("http://localhost:5500/get-code", {
-      method: "POST",
-      body: JSON.stringify({ message: "ecommerce product card" }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        files["/src/app/app.component.html"] = data.code.html;
-        files["/src/app/app.component.css"] = data.code.css;
-        files["/src/app/app.component.ts"] = data.code.ts;
-      });
-  } catch (error) {
-    console.error(error);
-  }
 
   return (
     <div className="w-full h-full flex flex-col">

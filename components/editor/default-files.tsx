@@ -1,5 +1,7 @@
 const files = {
-    "/src/app/app.component.css": "",
+    "/src/app/app.component.css": {
+        code: "",
+    },
     "/src/app/app.component.html": {
       code: `<div class="container">
       <h1>{{ helloWorld }}</h1>

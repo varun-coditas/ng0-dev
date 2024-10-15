@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
 import { Paperclip, Send } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { SandpackContext } from '@/contexts/SandpackContext'
 
 type Message = {
   id: number
@@ -20,8 +21,9 @@ export default function ChatBoxComponent() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const { updateSandpackFiles } = useContext(SandpackContext)
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (inputText.trim() || attachment) {
       const newMessage: Message = {
         id: Date.now(),
@@ -33,15 +35,45 @@ export default function ChatBoxComponent() {
       setInputText('')
       setAttachment(null)
       
-      // Simulate AI response
-      setTimeout(() => {
+      try {
+        const response = await fetch("http://127.0.0.1:5500/get-code", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ message: inputText.trim() }),
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch code');
+        }
+        
+        const data = await response.json();
+        
+        // Update Sandpack files
+        updateSandpackFiles({
+          "/src/app/app.component.html": data.code.html,
+          "/src/app/app.component.css": data.code.css,
+          "/src/app/app.component.ts": data.code.ts,
+        });
+
+        // Simulate AI response
         const aiResponse: Message = {
           id: Date.now(),
-          text: "This is a simulated AI response.",
+          text: "I've updated the code based on your request. Check the editor for changes.",
           sender: 'ai',
         }
         setMessages(prevMessages => [...prevMessages, aiResponse])
-      }, 1000)
+      } catch (error) {
+        console.error('Error fetching code:', error);
+        // Add error message to chat
+        const errorMessage: Message = {
+          id: Date.now(),
+          text: "Sorry, there was an error processing your request.",
+          sender: 'ai',
+        }
+        setMessages(prevMessages => [...prevMessages, errorMessage])
+      }
     }
   }
 
