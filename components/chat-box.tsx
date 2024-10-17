@@ -21,7 +21,7 @@ export default function ChatBoxComponent() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const { updateSandpackFiles } = useContext(SandpackContext)
+  const { updateSandpackFiles, addNewComponent } = useContext(SandpackContext)
 
   const handleSendMessage = async () => {
     if (inputText.trim() || attachment) {
@@ -49,18 +49,29 @@ export default function ChatBoxComponent() {
         }
         
         const data = await response.json();
+
+        const componentName = data.metadata.componentName;
+        const componentSelector = data.metadata.componentSelector;
+        const exampleUsage = data.metadata.exampleUsage;
+        const kebabCaseName = componentName.replace(/Component$/, '').replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
         
-        // Update Sandpack files
-        updateSandpackFiles({
-          "/src/app/app.component.html": data.code.html,
-          "/src/app/app.component.css": data.code.css,
-          "/src/app/app.component.ts": data.code.ts,
-        });
+        const htmlContent = data.code.html;
+        const cssContent = data.code.css;
+        const tsContent = data.code.ts;
+
+        const newComponentFiles = {
+          [`/src/app/${kebabCaseName}/${kebabCaseName}.component.html`]: htmlContent,
+          [`/src/app/${kebabCaseName}/${kebabCaseName}.component.css`]: cssContent,
+          [`/src/app/${kebabCaseName}/${kebabCaseName}.component.ts`]: tsContent,
+        };
+        
+        // Add new component files and update app component
+        addNewComponent(componentName, componentSelector, exampleUsage, newComponentFiles);
 
         // Simulate AI response
         const aiResponse: Message = {
           id: Date.now(),
-          text: "I've updated the code based on your request. Check the editor for changes.",
+          text: `I've created a new component '${componentName}' and updated the main app component to include it. Check the editor for changes.`,
           sender: 'ai',
         }
         setMessages(prevMessages => [...prevMessages, aiResponse])

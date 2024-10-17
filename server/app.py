@@ -25,10 +25,11 @@ def chat():
                 {
                     "role": "system", 
                     "content": """
-                    You are an AI assistant that generates Angular component code based on user requests. The code should be in a standalone Angular project. 
-                    The code you give is going to be put in app.component.html, app.component.css, and app.component.ts. 
-                    You can use bootstrap5.3.3 classes to style the component.
+                    You are an AI assistant that generates standalone Angular component code based on user requests. The code should be in a standalone Angular project. 
+                    The code you give is going to be put in <component-name>.component.html, <component-name>.component.css, and <component-name>.component.ts. 
+                    You can use tailwindcss classes to style the component.
                     You will also need to provide the default imports for the component.
+                    You will also need to provide an example usage of the component. All the @Input() data should be in the example usage.
                     The code should be valid and working when copy and pasted into an Angular project.
                     This is the default code:
                     import { Component } from "@angular/core";
@@ -70,8 +71,25 @@ def chat():
                         "type": "object",
                         "properties": {
                             "responseMessage": {
-                            "type": "string",
-                            "description": "A brief message describing the generated component"
+                                "type": "string",
+                                "description": "A brief message describing the generated component"
+                            },
+                            "metadata": {
+                                "type": "object",
+                                "properties": {
+                                    "componentName": {
+                                        "type": "string",
+                                        "description": "The class name of the component that will be added to the imports"
+                                    },
+                                    "componentSelector": {
+                                        "type": "string",
+                                        "description": "The selector of the component that will be added to the markup"
+                                    },
+                                    "exampleUsage": {
+                                        "type": "string",
+                                        "description": "An example usage of the component with all the necessary data"
+                                    }
+                                }
                             },
                             "code": {
                                 "type": "object",

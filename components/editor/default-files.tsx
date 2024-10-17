@@ -3,17 +3,7 @@ const files = {
         code: "",
     },
     "/src/app/app.component.html": {
-      code: `<div class="container">
-      <h1>{{ helloWorld }}</h1>
-    
-      <input [(ngModel)]="userInput" placeholder="Type something..." />
-      <button (click)="toggleMessage()">Toggle Message</button>
-      <button (click)="clearInput()">Clear Input</button>
-    
-      <p *ngIf="showMessage">You typed: {{ userInput }}</p>
-    </div>
-        
-    `,
+      code: "",
     },
     "/src/app/app.component.ts": {
       code: `import { Component } from "@angular/core";
@@ -28,17 +18,7 @@ const files = {
       imports: [CommonModule, FormsModule],
     })
     export class AppComponent {
-      helloWorld = "Hello world";
-      showMessage = false;
-      userInput = "";
-    
-      toggleMessage(): void {
-        this.showMessage = !this.showMessage;
-      }
-    
-      clearInput(): void {
-        this.userInput = "";
-      }
+      
     }
     
     
@@ -54,7 +34,7 @@ const files = {
           
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link rel="icon" type="image/x-icon" href="favicon.ico">
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+      
     </head>
     <body>
        <app-root></app-root>
@@ -69,6 +49,12 @@ const files = {
     
     bootstrapApplication(AppComponent)
       .catch(err => console.log(err));
+    
+    const tailwindCDN = document.createElement('script');
+    tailwindCDN.src = 'https://cdn.tailwindcss.com';
+    document.head.appendChild(tailwindCDN);
+
+
     `,
     },
     "/src/polyfills.ts": {

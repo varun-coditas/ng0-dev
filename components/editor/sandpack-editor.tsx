@@ -6,6 +6,7 @@ import {
   SandpackCodeEditor,
   SandpackPreview,
   SandpackConsole,
+  SandpackFileExplorer,
   useActiveCode,
   useSandpack,
 } from "@codesandbox/sandpack-react";
@@ -52,6 +53,17 @@ export default function SandpackEditor({ code }: SandpackEditorProps) {
     }
   };
 
+  // Get all visible files dynamically. DO NOT include app.component.ts, app.component.html, or app.component.css in the visible files.
+  const visibleFiles = Object.keys(files).filter(file => 
+    file.startsWith('/src/app/') && 
+    (file.endsWith('.html') || file.endsWith('.css') || file.endsWith('.ts'))
+  ).filter(file => !file.endsWith('app.component.ts') && !file.endsWith('app.component.css'));
+  console.log(visibleFiles);
+  if(visibleFiles.length === 1) {
+    visibleFiles.push('/src/app/app.component.ts');
+    visibleFiles.push('/src/app/app.component.css');
+  }
+
   return (
     <div className="w-full h-full flex flex-col">
       <SandpackProvider
@@ -61,13 +73,8 @@ export default function SandpackEditor({ code }: SandpackEditorProps) {
         customSetup={customSetup}
         options={{
           showLineNumbers: true,
-          autoReload: true, // Disable auto-reload
-          visibleFiles: [
-            "/src/app/app.component.html",
-            "/src/app/app.component.css",
-            "/src/app/app.component.ts",
-            "/src/index.html",
-          ],
+          autoReload: true,
+          visibleFiles: visibleFiles,
         }}
       >
         <div className="p-2 flex items-center space-x-2">
@@ -91,12 +98,12 @@ export default function SandpackEditor({ code }: SandpackEditorProps) {
             }}
           >
             <div className="w-1/2">
-                <SandpackCodeEditor
-                  readOnly
-                  showLineNumbers={true}
-                  
-                  style={{ height: "100%" }}
-                />
+            {/* <SandpackFileExplorer/> */}
+              <SandpackCodeEditor
+                readOnly
+                showLineNumbers={true}
+                style={{ height: "100%" }}
+              />
             </div>
             <div className="w-1/2">
               <SandpackLayout style={{ height: "100%" }}>
@@ -106,7 +113,6 @@ export default function SandpackEditor({ code }: SandpackEditorProps) {
               </SandpackLayout>
             </div>
           </div>
-          <SandpackConsole />
         </div>
       </SandpackProvider>
     </div>
