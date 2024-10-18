@@ -18,6 +18,7 @@ export default function ChatBoxComponent() {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputText, setInputText] = useState('')
   const [attachment, setAttachment] = useState<File | null>(null)
+  const [sessionId, setSessionId] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -36,12 +37,20 @@ export default function ChatBoxComponent() {
       setAttachment(null)
       
       try {
+        const requestBody: { message: string; session_id?: string } = {
+          message: inputText.trim(),
+        }
+        
+        if (sessionId) {
+          requestBody.session_id = sessionId
+        }
+        
         const response = await fetch("http://127.0.0.1:5500/get-code", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ message: inputText.trim() }),
+          body: JSON.stringify(requestBody),
         });
         
         if (!response.ok) {
@@ -49,6 +58,11 @@ export default function ChatBoxComponent() {
         }
         
         const data = await response.json();
+
+        // Store the session_id if it's returned and we don't have one yet
+        if (data.session_id && !sessionId) {
+          setSessionId(data.session_id);
+        }
 
         const componentName = data.metadata.componentName;
         const componentSelector = data.metadata.componentSelector;

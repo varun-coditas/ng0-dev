@@ -2,7 +2,8 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Menu, User } from "lucide-react"
+import { Menu, User, Sun, Moon } from "lucide-react"
+import { useTheme } from "next-themes"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -18,6 +19,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 export default function NavbarComponent() {
   const [isOpen, setIsOpen] = React.useState(false)
+  const { theme, setTheme } = useTheme()
 
   return (
     <header className="sticky top-0 z-50 w-full px-8 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -29,6 +31,7 @@ export default function NavbarComponent() {
           <Link href="/about">About</Link>
           <Link href="/products">Products</Link>
           <Link href="/contact">Contact</Link>
+          <ThemeToggle />
           <UserNav />
         </nav>
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -60,9 +63,27 @@ function MobileNav() {
       <Link href="/products">Products</Link>
       <Link href="/contact">Contact</Link>
       <div className="mt-4">
+        <ThemeToggle />
         <UserNav />
       </div>
     </div>
+  )
+}
+
+function ThemeToggle() {
+  const { theme, setTheme } = useTheme()
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      className="h-8 w-8 px-0"
+    >
+      <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+      <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <span className="sr-only">Toggle theme</span>
+    </Button>
   )
 }
 

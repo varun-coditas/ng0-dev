@@ -13,6 +13,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { SandpackContext } from '@/contexts/SandpackContext';
+import { useTheme } from "next-themes";
 
 // Custom hook to manage preview state
 function usePreviewState() {
@@ -37,6 +38,7 @@ export default function SandpackEditor({ code }: SandpackEditorProps) {
   const [activeView, setActiveView] = useState("editor");
   const [hasRunOnce, setHasRunOnce] = useState(false);
   const { files, updateSandpackFiles } = useContext(SandpackContext);
+  const { theme } = useTheme();
 
   useEffect(() => {
     updateSandpackFiles(code);
@@ -69,7 +71,7 @@ export default function SandpackEditor({ code }: SandpackEditorProps) {
       <SandpackProvider
         template="angular"
         files={files}
-        theme="dark"
+        theme={theme === "dark" ? "dark" : "light"}
         customSetup={customSetup}
         options={{
           showLineNumbers: true,

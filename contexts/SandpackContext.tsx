@@ -30,7 +30,7 @@ export const SandpackProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       // Update app.component.html
       const appHtml = updatedFiles['/src/app/app.component.html'] || '';
       const newHtmlContent = typeof appHtml === 'string' ? appHtml : appHtml.code;
-      updatedFiles['/src/app/app.component.html'] = `${newHtmlContent}\n${exampleUsage}`;
+      updatedFiles['/src/app/app.component.html'] = `${exampleUsage}`;
 
       // Update app.component.ts
       const kebabCaseName = componentName.replace(/Component$/, '').replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();

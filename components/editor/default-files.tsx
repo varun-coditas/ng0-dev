@@ -1,6 +1,6 @@
 const files = {
     "/src/app/app.component.css": {
-        code: "",
+        code: ":host{padding: 20px;}",
     },
     "/src/app/app.component.html": {
       code: "",
