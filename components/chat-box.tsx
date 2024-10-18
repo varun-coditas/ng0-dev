@@ -85,7 +85,7 @@ export default function ChatBoxComponent() {
         // Simulate AI response
         const aiResponse: Message = {
           id: Date.now(),
-          text: `I've created a new component '${componentName}' and updated the main app component to include it. Check the editor for changes.`,
+          text: data.responseMessage,
           sender: 'ai',
         }
         setMessages(prevMessages => [...prevMessages, aiResponse])
