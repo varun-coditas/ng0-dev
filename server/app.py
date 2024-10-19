@@ -141,5 +141,13 @@ def chat():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/get-component', methods=['GET'])
+def get_component():
+    # fetch component from session_id. session_id is in the request query params
+    session_id = request.args.get('session_id')
+    component = session[session_id][-1]
+    print(component)
+    return json.loads(component['content'])
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5500)

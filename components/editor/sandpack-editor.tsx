@@ -62,7 +62,7 @@ export default function SandpackEditor({ code }: SandpackEditorProps) {
   ).filter(file => !file.endsWith('app.component.ts') && !file.endsWith('app.component.css'));
   console.log(visibleFiles);
   if(visibleFiles.length === 1) {
-    visibleFiles.push('/src/app/app.component.ts');
+    // visibleFiles.push('/src/app/app.component.ts');
     visibleFiles.push('/src/app/app.component.css');
   }
 
